@@ -1,15 +1,21 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        users_in_memory: { memory: null }
+        hwi:
+            id: App\Service\UserProvider
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            pattern: ^/
+            oauth:
+                resource_owners:
+                    eveonline: "/login"
+                login_path: '/sso'
+                oauth_user_provider:
+                    service: App\Service\UserProvider
             anonymous: true
-            lazy: true
-            provider: users_in_memory
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

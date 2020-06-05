@@ -1,0 +1,9 @@
+hwi_oauth:
+    # list of names of the firewalls in which this bundle is active, this setting MUST be set
+    firewall_names: [main]
+
+    resource_owners:
+        eveonline:
+            type:                eve_online
+            client_id:           fe6b9f9f682d4c399ae805453b906aad
+            client_secret:       mWKtskEb96C0pnU7Pe6lvsyekLA2n0BDzZAjZbKd
