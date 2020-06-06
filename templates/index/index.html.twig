@@ -53,6 +53,16 @@
                             {% endif %}
                         </div>
                     </div>
+                    <div class="m-1 row">
+                        <div class="col-4">
+                            <h5>Roles</h5>
+                        </div>
+                        <div class="col-8">
+                            {% for role in roles %}
+                                <span class="badge badge-secondary">{{ role }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

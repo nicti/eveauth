@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Alliance;
 use App\Entity\Character;
 use App\Entity\Corporation;
+use App\Entity\DiscordRole;
 use App\Eve\CharacterProcessor;
 use App\Repository\AllianceRepository;
 use App\Repository\CharacterRepository;
@@ -68,7 +69,11 @@ class IndexController extends AbstractController
         if (!$user) {
             return new RedirectResponse('sso');
         }
-        $characterProcessor = new CharacterProcessor();
+        $characterProcessor = new CharacterProcessor(
+            $this->characterRepository,
+            $this->corporationRepository,
+            $this->allianceRepository
+        );
         $characterData = $characterProcessor->getInfo($user->getUid(),$user->getUsername());
 
         $character = $this->characterRepository->findOneBy(['uid' => $characterData['char']['id']]);
@@ -104,7 +109,8 @@ class IndexController extends AbstractController
                 'name' => $character->getDiscordName(),
                 'mail' => $character->getDiscordMail(),
                 'url' => 'https://discord.com/api/oauth2/authorize?client_id=717918091727601684&redirect_uri='.$request->getSchemeAndHttpHost().'/discord/callback&response_type=code&scope=identify%20email%20guilds.join'
-            ]
+            ],
+            'roles' => $characterProcessor->getRolesArray($characterData)
         ]);
     }
 
@@ -161,6 +167,18 @@ class IndexController extends AbstractController
         $this->entityManager->persist($character);
         $this->entityManager->flush();
 
+        $characterProcessor = new CharacterProcessor(
+            $this->characterRepository,
+            $this->corporationRepository,
+            $this->allianceRepository
+        );
+        $characterData = $characterProcessor->getInfo($character->getUid(),$character->getName());
+        $roles = $characterProcessor->getRolesArray($characterData);
+        $roleArray = [];
+        /** @var DiscordRole $role */
+        foreach ($roles as $role) {
+            $roleArray[] = $role->getUid();
+        }
 
         $joinClient = new Client([
             'base_uri' => sprintf('%s', rtrim(self::BASE_URI, '/')),
@@ -172,7 +190,8 @@ class IndexController extends AbstractController
         $joinReponse = $joinClient->request('PUT','/api/'.self::VERSION.'/guilds/'.$_ENV['GUILD_ID'].'/members/'.$character->getDiscordId(),[
             'json' => [
                 'access_token' => $response['access_token'],
-                'nick' => $character->getName()
+                'nick' => $character->getName(),
+                'roles' => $roleArray
             ]
         ]);
 

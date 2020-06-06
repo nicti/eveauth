@@ -2,6 +2,9 @@
 
 namespace App\Eve;
 
+use App\Repository\AllianceRepository;
+use App\Repository\CharacterRepository;
+use App\Repository\CorporationRepository;
 use GuzzleHttp\Client;
 
 class CharacterProcessor
@@ -19,6 +22,35 @@ class CharacterProcessor
     protected array $idCache = [
         '' => 'None'
     ];
+    /**
+     * @var CharacterRepository
+     */
+    private CharacterRepository $characterRepository;
+    /**
+     * @var CorporationRepository
+     */
+    private CorporationRepository $corporationRepository;
+    /**
+     * @var AllianceRepository
+     */
+    private AllianceRepository $allianceRepository;
+
+    /**
+     * CharacterProcessor constructor.
+     * @param CharacterRepository $characterRepository
+     * @param CorporationRepository $corporationRepository
+     * @param AllianceRepository $allianceRepository
+     */
+    public function __construct(
+        CharacterRepository $characterRepository,
+        CorporationRepository $corporationRepository,
+        AllianceRepository $allianceRepository
+    )
+    {
+        $this->characterRepository = $characterRepository;
+        $this->corporationRepository = $corporationRepository;
+        $this->allianceRepository = $allianceRepository;
+    }
 
     protected ?Client $client = null;
 
@@ -96,6 +128,24 @@ class CharacterProcessor
                 'name' => $this->allianceName
             ]
         ];
+    }
+
+    public function getRolesArray(array $data)
+    {
+        $character = $this->characterRepository->findOneBy(['uid' => $data['char']['id']]);
+        $corporation = $this->corporationRepository->findOneBy(['uid' => $data['corp']['id']]);
+        $alliance = $this->allianceRepository->findOneBy(['uid' => $data['alli']['id']]);
+        $roles = [];
+        foreach ($character->getRoles() as $role) {
+            $roles[] = $role;
+        }
+        foreach ($corporation->getRoles() as $role) {
+            $roles[] = $role;
+        }
+        foreach ($alliance->getRoles() as $role) {
+            $roles[] = $role;
+        }
+        return $roles;
     }
 
 
