@@ -71,13 +71,8 @@ class DiscordPushCommand extends Command
                 ],
             ]);
         }
-
-        $response = $this->client->request(
-            'GET',
-            '/api/' . self::VERSION . '/guilds/' . $_ENV['GUILD_ID'] . '/members?limit=1000'
-        );
-        $response = json_decode($response->getBody(), true);
-        $latest = $this->push($response);
+        
+        $latest = 0;
         do {
             $response = $this->client->request(
                 'GET',
