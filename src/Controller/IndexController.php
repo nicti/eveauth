@@ -190,7 +190,7 @@ class IndexController extends AbstractController
         $joinReponse = $joinClient->request('PUT','/api/'.self::VERSION.'/guilds/'.$_ENV['GUILD_ID'].'/members/'.$character->getDiscordId(),[
             'json' => [
                 'access_token' => $response['access_token'],
-                'nick' => $character->getName(),
+                'nick' => $characterProcessor->getName($characterData),
                 'roles' => $roleArray
             ]
         ]);

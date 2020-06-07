@@ -123,7 +123,7 @@ class DiscordPushCommand extends Command
                     '/api/'.self::VERSION.'/guilds/' . $_ENV['GUILD_ID'] . '/members/'.$user['user']['id'],
                     [
                         'json' =>  [
-                            'nick' => $character->getName(),
+                            'nick' => $characterProcessor->getName($characterData),
                             'roles' => $roleArray
                         ]
                     ]

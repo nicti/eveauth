@@ -15,12 +15,17 @@ class CharacterProcessor
 
     protected string $corpID        = '';
     protected string $corpName      = '';
+    protected string $corpTicker    = '';
 
     protected string $allianceID    = '';
     protected string $allianceName  = '';
+    protected string $allianceTicker= '';
 
     protected array $idCache = [
-        '' => 'None'
+        '' => [
+            'name' => 'None',
+            'ticker' => ''
+        ]
     ];
     /**
      * @var CharacterRepository
@@ -64,9 +69,11 @@ class CharacterProcessor
 
         $this->corpName = '';
         $this->corpID = '';
+        $this->corpTicker = '';
 
         $this->allianceName = '';
         $this->allianceID = '';
+        $this->allianceTicker = '';
 
         if (!$this->client) {
             $this->client = new Client([
@@ -83,37 +90,28 @@ class CharacterProcessor
         $this->corpID = $response['corporation_id']??'';
         $this->allianceID = $response['alliance_id']??'';
 
-        if (isset($this->idCache[$this->corpID])) {
-            $this->corpName = $this->idCache[$this->corpID];
+        if (!isset($this->idCache[$this->corpID])) {
+            $corpResponse = $this->client->request('GET','/v4/corporations/'.$this->corpID.'/');
+            $corpResponse = json_decode($corpResponse->getBody(),true);
+            $this->idCache[$this->corpID] = array(
+                'name' => $corpResponse['name'],
+                'ticker' => $corpResponse['ticker']
+            );
         }
-        if (isset($this->idCache[$this->allianceID])) {
-            $this->allianceName = $this->idCache[$this->allianceID];
-        }
-        if ($this->corpName == '' && $this->allianceName != '') {
-            $ids = '['.$this->corpID.']';
-        } else if ($this->corpName != '' && $this->allianceName == '') {
-            $ids = '['.$this->allianceID.']';
-        } else if($this->corpName == '' && $this->allianceName == '') {
+        $this->corpName = $this->idCache[$this->corpID]['name'];
+        $this->corpTicker = $this->idCache[$this->corpID]['ticker'];
 
-            $ids = '['.$this->corpID.','.$this->allianceID.']';
-        } else {
-            $ids = '';
+        if (!isset($this->idCache[$this->allianceID])) {
+            $allianceResponse = $this->client->request('GET','/v3/alliances/'.$this->allianceID.'/');
+            $allianceResponse = json_decode($allianceResponse->getBody(),true);
+            $this->idCache[$this->allianceID] = array(
+                'name' => $allianceResponse['name'],
+                'ticker' => $allianceResponse['ticker']
+            );
         }
+        $this->allianceName = $this->idCache[$this->allianceID]['name'];
+        $this->allianceTicker = $this->idCache[$this->allianceID]['ticker'];
 
-        if ($ids != '') {
-            $response = $this->client->request('POST','/v3/universe/names/',[
-                'body' => $ids
-            ]);
-            $response = json_decode($response->getBody(),true);
-            foreach ($response as $name) {
-                if ($name['category'] == 'corporation') {
-                    $this->corpName = $name['name'];
-                }
-                if ($name['category'] == 'alliance') {
-                    $this->allianceName = $name['name'];
-                }
-            }
-        }
         return [
             'char' => [
                 'id' => $this->characterID,
@@ -121,11 +119,13 @@ class CharacterProcessor
             ],
             'corp' => [
                 'id' => $this->corpID,
-                'name' => $this->corpName
+                'name' => $this->corpName,
+                'ticker' => $this->corpTicker
             ],
             'alli' => [
                 'id' => $this->allianceID,
-                'name' => $this->allianceName
+                'name' => $this->allianceName,
+                'ticker' => $this->allianceTicker
             ]
         ];
     }
@@ -146,6 +146,14 @@ class CharacterProcessor
             $roles[] = $role;
         }
         return $roles;
+    }
+
+    public function getName(array $data)
+    {
+        if ($data['alli']['id'] !== '') {
+            return '['.$data['alli']['ticker'].'] '.$data['char']['name'];
+        }
+        return '['.$data['corp']['ticker'].'] '.$data['char']['name'];
     }
 
 
