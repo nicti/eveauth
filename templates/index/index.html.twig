@@ -3,68 +3,54 @@
 {% block title %}EVEAuth Home{% endblock %}
 
 {% block body %}
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-4 offset-4">
-                <div style="border: 1px solid white; border-radius: 5px; background-color: rgba(48, 48, 48, 0.7)">
-                    <div class="m-1 row" style="text-align: center;">
-                        <div class="col-12">
-                            <p style="font-size: 40px; margin-bottom: -10px;">EVEAuth</p>
-                        </div>
-                        <div class="col-12">
-                            <p style="font-size: 20px; margin-bottom: 0;">by nicti</p>
-                        </div>
-                    </div>
-                    <div class="m-1 row">
-                        <div class="col-4">
-                            <img src="https://images.evetech.net/characters/{{ data.char.id }}/portrait?size=64">
-                        </div>
-                        <div class="col-8">
-                            <span style="line-height: 64px;">{{ data.char.name }}</span>
-                        </div>
-                    </div>
-                    <div class="m-1 row">
-                        <div class="col-4">
-                            <img src="https://images.evetech.net/corporations/{{ data.corp.id }}/logo?size=64">
-                        </div>
-                        <div class="col-8">
-                            <span style="line-height: 64px;">{{ data.corp.name }}</span>
-                        </div>
-                    </div>
-                    <div class="m-1 row">
-                        <div class="col-4">
-                            <img src="https://images.evetech.net/alliances/{{ data.alli.id }}/logo?size=64">
-                        </div>
-                        <div class="col-8">
-                            <span style="line-height: 64px;">{{ data.alli.name }}</span>
-                        </div>
-                    </div>
-                    <div class="m-1 row">
-                        <div class="col-4">
-                            <img width="64px" src="/images/discord.png">
-                        </div>
-                        <div class="col-8">
-                            {% if discord.name == '' %}
-                                <a href="{{ discord.url }}" style="line-height: 64px;">Connect to Discord</a>
-                            {% else %}
-                                <p style="margin-bottom: 0">Name: {{ discord.name }}</p>
-                                <p style="margin-bottom: 0">Mail: {{ discord.mail }}</p>
-                                <a href="{{ discord.url }}">Reconnect to Discord</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="m-1 row">
-                        <div class="col-4">
-                            <h5>Roles</h5>
-                        </div>
-                        <div class="col-8">
-                            {% for role in roles %}
-                                <span class="badge badge-secondary">{{ role }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="border-b mx-0 pb-1 mt-1 row">
+        <div class="col-4">
+            <img src="https://images.evetech.net/characters/{{ data.char.id }}/portrait?size=64"
+                 alt="{{ data.char.name }}">
+        </div>
+        <div class="col-8 d-flex align-self-center">
+            <span>{{ data.char.name }}</span>
+        </div>
+    </div>
+    <div class="border-b mx-0 pb-1 mt-1 row">
+        <div class="col-4">
+            <img src="https://images.evetech.net/corporations/{{ data.corp.id }}/logo?size=64"
+                 alt="{{ data.corp.name }}">
+        </div>
+        <div class="col-8 d-flex align-self-center">
+            <span>{{ data.corp.name }}</span>
+        </div>
+    </div>
+    <div class="border-b mx-0 pb-1 mt-1 row">
+        <div class="col-4">
+            <img src="https://images.evetech.net/alliances/{{ data.alli.id }}/logo?size=64" alt="{{ data.alli.name }}">
+        </div>
+        <div class="col-8 d-flex align-self-center">
+            <span>{{ data.alli.name }}</span>
+        </div>
+    </div>
+    <div class="border-b mx-0 pb-1 mt-1 row">
+        <div class="col-4">
+            <img width="64px" src="/images/discord.png" alt="Discord">
+        </div>
+        <div class="col-8 d-flex align-self-center">
+            {% if discord.name == '' %}
+                <a href="{{ discord.url }}" style="line-height: 64px;">Connect to Discord</a>
+            {% else %}
+                <p style="margin-bottom: 0">Name: {{ discord.name }}</p>
+                <p style="margin-bottom: 0">Mail: {{ discord.mail }}</p>
+                <a href="{{ discord.url }}">Reconnect to Discord</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="border-b mx-0 pb-1 mt-1 row">
+        <div class="col-4">
+            <h5>Roles</h5>
+        </div>
+        <div class="col-8 d-flex align-self-center">
+            {% for role in roles %}
+                <span class="badge badge-secondary">{{ role }}</span>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

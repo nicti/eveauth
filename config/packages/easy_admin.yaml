@@ -8,9 +8,14 @@ easy_admin:
     entities:
         DiscordRole:
             class: App\Entity\DiscordRole
-            disabled_actions: ['new','edit','delete']
+            disabled_actions: ['new','delete']
             list:
                 fields: ['id','name','characters','corporations','alliances']
+            form:
+                fields:
+                    - { property: 'Name', type_options: { disabled: true }}
+                    - 'Manager'
+                    - 'Type'
         Character:
             class: App\Entity\Character
             disabled_actions: ['new']
@@ -40,6 +45,16 @@ easy_admin:
                 fields:
                     - { property: 'Name', type_options: { disabled: true }}
                     - 'Roles'
-    site_name: 'EVEAuth by nicti'
+    site_name: 'EVEAuth by nicti Tenor'
     user:
         name_property_path: 'Username'
+    design:
+        menu:
+            - {label: 'Discord'}
+            - DiscordRole
+            - {label: 'Pull Roles', url: '/admin/pullRoles', icon: 'download'}
+            - {label: 'Push Roles', url: '/admin/pushRoles', icon: 'upload'}
+            - {label: 'EVE'}
+            - Character
+            - Corporation
+            - Alliance

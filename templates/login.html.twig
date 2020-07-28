@@ -3,27 +3,11 @@
 {% block title %}EVEAuth Login{% endblock %}
 
 {% block body %}
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-4 offset-4">
-                <div style="border: 1px solid white; border-radius: 5px; background-color: rgba(48, 48, 48, 0.7)">
-                    <div class="m-1 row" style="text-align: center;">
-                        <div class="col-12">
-                            <p style="font-size: 40px; margin-bottom: -10px;">EVEAuth</p>
-                        </div>
-                        <div class="col-12">
-                            <p style="font-size: 20px; margin-bottom: 0;">by nicti</p>
-                        </div>
-                    </div>
-                    <div class="m-1 row" style="text-align: center;">
-                        <div class="col-12">
-                            <a href="{{ path('hwi_oauth_service_redirect', {'service': 'eveonline' }) }}">
-                                <img src="/images/eve-sso-login-black-large.png" alt="Login with EVE">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="m-1 row" style="text-align: center;">
+        <div class="col-12">
+            <a href="{{ path('hwi_oauth_service_redirect', {'service': 'eveonline' }) }}">
+                <img src="/images/eve-sso-login-black-large.png" alt="Login with EVE">
+            </a>
         </div>
     </div>
 {% endblock %}

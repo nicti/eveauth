@@ -1,0 +1,24 @@
+.content__wrapper {
+    border: 1px solid white;
+    border-radius: 5px;
+    background-color: rgba(48, 48, 48, 0.7);
+}
+
+.content__wrapper-subline {
+    font-size: 20px;
+    margin-bottom: 0;
+}
+
+.content__wrapper-headline {
+    font-size: 40px;
+    margin-bottom: -10px;
+}
+
+.border-b {
+    border-bottom: solid 1px rgba(255, 255, 255, 0.5);
+}
+
+body.body {
+    background-size: cover;
+    background: #1b1e21 url(/images/background.jpg) no-repeat fixed center center;
+}
