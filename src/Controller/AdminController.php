@@ -8,8 +8,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
 use EasyCorp\Bundle\EasyAdminBundle\Exception\ForbiddenActionException;
 use GuzzleHttp\Client;
-use Symfony\Component\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,12 +73,13 @@ class AdminController extends EasyAdminController
     /**
      * @Route("/pullRoles")
      * @param Request $request
-     * @return RedirectResponse
+     * @param KernelInterface $kernel
+     * @return Response
      * @throws \Exception
      */
-    public function pullRolesAction(Request $request)
+    public function pullRolesAction(Request $request, KernelInterface $kernel)
     {
-        $application = new Application();
+        $application = new Application($kernel);
         $application->setAutoExit(false);
 
         $input = new ArrayInput([
@@ -94,12 +96,13 @@ class AdminController extends EasyAdminController
     /**
      * @Route("/pushRoles")
      * @param Request $request
+     * @param KernelInterface $kernel
      * @return RedirectResponse
      * @throws \Exception
      */
-    public function pushRolesAction(Request $request)
+    public function pushRolesAction(Request $request, KernelInterface $kernel)
     {
-        $application = new Application();
+        $application = new Application($kernel);
         $application->setAutoExit(false);
 
         $input = new ArrayInput([
