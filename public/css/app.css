@@ -25,3 +25,8 @@ body.body {
     -o-background-size: cover;
     background-size: cover;
 }
+
+.roles {
+    font-weight: 200;
+    font-size: 22px;
+}
