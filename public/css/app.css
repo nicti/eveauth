@@ -19,6 +19,9 @@
 }
 
 body.body {
-    background-size: cover;
     background: #1b1e21 url(/images/background.jpg) no-repeat fixed center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }

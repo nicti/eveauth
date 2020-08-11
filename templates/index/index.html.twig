@@ -37,9 +37,11 @@
             {% if discord.name == '' %}
                 <a href="{{ discord.url }}" style="line-height: 64px;">Connect to Discord</a>
             {% else %}
-                <p style="margin-bottom: 0">Name: {{ discord.name }}</p>
-                <p style="margin-bottom: 0">Mail: {{ discord.mail }}</p>
-                <a href="{{ discord.url }}">Reconnect to Discord</a>
+                <div class="row">
+                    <div class="col-24">Name: {{ discord.name }}</div>
+                    <div class="col-24">Mail: {{ discord.mail }}</div>
+                    <div class="col-24"><a href="{{ discord.url }}">Reconnect to Discord</a></div>
+                </div>
             {% endif %}
         </div>
     </div>
