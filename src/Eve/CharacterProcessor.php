@@ -136,14 +136,20 @@ class CharacterProcessor
         $corporation = $this->corporationRepository->findOneBy(['uid' => $data['corp']['id']]);
         $alliance = $this->allianceRepository->findOneBy(['uid' => $data['alli']['id']]);
         $roles = [];
-        foreach ($character->getRoles() as $role) {
-            $roles[] = $role;
+        if ($character) {
+            foreach ($character->getRoles() as $role) {
+                $roles[] = $role;
+            }
         }
-        foreach ($corporation->getRoles() as $role) {
-            $roles[] = $role;
+        if ($corporation) {
+            foreach ($corporation->getRoles() as $role) {
+                $roles[] = $role;
+            }
         }
-        foreach ($alliance->getRoles() as $role) {
-            $roles[] = $role;
+        if ($alliance) {
+            foreach ($alliance->getRoles() as $role) {
+                $roles[] = $role;
+            }
         }
         return $roles;
     }
