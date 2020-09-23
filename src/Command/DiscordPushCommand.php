@@ -100,10 +100,10 @@ class DiscordPushCommand extends Command
                 $character = $this->characterRepository->findOneBy(['DiscordId' => $user['user']['id']]);
                 if ($character === null) {
                     //no matched user, kick discord user
-                    $this->client->request(
+                    /*$this->client->request(
                         'DELETE',
                         '/api/'.self::VERSION.'/guilds/' . $_ENV['GUILD_ID'] . '/members/'.$user['user']['id']
-                    );
+                    );*/
                     continue;
                 }
                 $characterProcessor = new CharacterProcessor(
