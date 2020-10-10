@@ -151,7 +151,7 @@ class CharacterProcessor
                 $roles[] = $role;
             }
         }
-        return $roles;
+        return array_unique($roles);
     }
 
     public function getName(array $data)
