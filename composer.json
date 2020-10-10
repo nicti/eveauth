@@ -5,6 +5,11 @@
         "php": "^7.2.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-json": "*",
+        "composer/package-versions-deprecated": "^1.11",
+        "doctrine/doctrine-bundle": "^2.1",
+        "doctrine/doctrine-migrations-bundle": "^2.0",
+        "doctrine/orm": "^2.7",
         "easycorp/easyadmin-bundle": "^2.3",
         "guzzlehttp/guzzle": "^6.5",
         "hwi/oauth-bundle": "^1.1",
@@ -25,7 +30,6 @@
         "symfony/mime": "5.1.*",
         "symfony/monolog-bundle": "^3.1",
         "symfony/notifier": "5.1.*",
-        "symfony/orm-pack": "*",
         "symfony/process": "5.1.*",
         "symfony/security-bundle": "5.1.*",
         "symfony/serializer-pack": "*",
@@ -34,8 +38,7 @@
         "symfony/twig-pack": "*",
         "symfony/validator": "5.1.*",
         "symfony/web-link": "5.1.*",
-        "symfony/yaml": "5.1.*",
-      "ext-json": "*"
+        "symfony/yaml": "5.1.*"
     },
     "require-dev": {
         "symfony/debug-pack": "*",
