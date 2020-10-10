@@ -9,11 +9,8 @@ use App\Repository\CharacterRepository;
 use App\Repository\CorporationRepository;
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DiscordPushCommand extends Command
 {
@@ -99,11 +96,7 @@ class DiscordPushCommand extends Command
             } else {
                 $character = $this->characterRepository->findOneBy(['DiscordId' => $user['user']['id']]);
                 if ($character === null) {
-                    //no matched user, kick discord user
-                    /*$this->client->request(
-                        'DELETE',
-                        '/api/'.self::VERSION.'/guilds/' . $_ENV['GUILD_ID'] . '/members/'.$user['user']['id']
-                    );*/
+                    //skip users who are not auth'd
                     continue;
                 }
                 $characterProcessor = new CharacterProcessor(
