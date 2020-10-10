@@ -8,14 +8,12 @@ easy_admin:
     entities:
         DiscordRole:
             class: App\Entity\DiscordRole
-            disabled_actions: ['new','delete']
+            disabled_actions: ['new']
             list:
                 fields: ['id','name','characters','corporations','alliances']
             form:
                 fields:
                     - { property: 'Name', type_options: { disabled: true }}
-                    - 'Manager'
-                    - 'Type'
         Character:
             class: App\Entity\Character
             disabled_actions: ['new']
