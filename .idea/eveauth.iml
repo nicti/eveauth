@@ -31,7 +31,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/laminas/laminas-zendframework-bridge" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/monolog/monolog" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nikic/php-parser" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/ocramius/package-versions" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ocramius/proxy-manager" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/pagerfanta/pagerfanta" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/php-http/client-common" />
@@ -51,6 +50,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/container" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/event-dispatcher" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-factory" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-message" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/link" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/log" />
@@ -84,7 +84,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/http-client-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/http-foundation" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/http-kernel" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/inflector" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/intl" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/mailer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/maker-bundle" />
@@ -93,7 +92,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/monolog-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/notifier" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/options-resolver" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/orm-pack" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/phpunit-bridge" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-grapheme" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-icu" />
