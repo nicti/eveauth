@@ -16,4 +16,4 @@
 ###< symfony/phpunit-bridge ###
 
 .idea
-deployer.php
+deploy.php
