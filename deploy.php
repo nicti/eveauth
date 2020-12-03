@@ -26,6 +26,7 @@ host('eveauth.nicti.de')
     ->user('nicti')
     ->identityFile('~/.ssh/id_rsa')
     ->hostname('mail-srv.nicti.de')
+    ->set('bin/php','/opt/keyhelp/php/7.4/bin/php')
     ->set('deploy_path', '~/www/{{application}}');
     
 // Tasks
