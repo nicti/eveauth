@@ -7,6 +7,7 @@ use App\Eve\CharacterProcessor;
 use App\Repository\AllianceRepository;
 use App\Repository\CharacterRepository;
 use App\Repository\CorporationRepository;
+use App\Repository\DiscordRoleRepository;
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,24 +32,31 @@ class DiscordPushCommand extends Command
      * @var AllianceRepository
      */
     private AllianceRepository $allianceRepository;
+    /**
+     * @var DiscordRoleRepository
+     */
+    private DiscordRoleRepository $discordRoleRepository;
 
     /**
      * DiscordPushCommand constructor.
      * @param CharacterRepository $characterRepository
      * @param CorporationRepository $corporationRepository
      * @param AllianceRepository $allianceRepository
+     * @param DiscordRoleRepository $discordRoleRepository
      * @param string|null $name
      */
     public function __construct(
         CharacterRepository $characterRepository,
         CorporationRepository $corporationRepository,
         AllianceRepository $allianceRepository,
+        DiscordRoleRepository $discordRoleRepository,
         string $name = null)
     {
         parent::__construct($name);
         $this->characterRepository = $characterRepository;
         $this->corporationRepository = $corporationRepository;
         $this->allianceRepository = $allianceRepository;
+        $this->discordRoleRepository = $discordRoleRepository;
     }
 
     protected function configure()
@@ -102,7 +110,8 @@ class DiscordPushCommand extends Command
                 $characterProcessor = new CharacterProcessor(
                     $this->characterRepository,
                     $this->corporationRepository,
-                    $this->allianceRepository
+                    $this->allianceRepository,
+                    $this->discordRoleRepository
                 );
                 $characterData = $characterProcessor->getInfo($character->getUid(),$character->getName());
                 $roles = $characterProcessor->getRolesArray($characterData);
