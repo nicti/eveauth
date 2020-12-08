@@ -21,6 +21,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminController extends EasyAdminController
 {
 
+    const BASE_URI = 'https://discord.com/api';
+    const VERSION = 'v6';
+    //Roles
+    const REGISTERED = 'Registered';
     /**
      * @var KernelInterface
      */
@@ -112,6 +116,44 @@ class AdminController extends EasyAdminController
         $output = new NullOutput();
 
         $application->run($input, $output);
+
+        return new RedirectResponse('/admin');
+    }
+
+    /**
+     * @Route("/setupRoles")
+     * @param Request $request
+     * @param KernelInterface $kernel
+     * @return RedirectResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function setupRolesAction(Request $request, KernelInterface $kernel)
+    {
+        $client = new Client([
+            'base_uri' => sprintf('%s', rtrim(self::BASE_URI, '/')),
+            'headers' => [
+                'Authorization' => sprintf('Bot %s', $_ENV['BOT_TOKEN']),
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+
+        $response = $client->request('GET','/api/'.self::VERSION.'/guilds/'.$_ENV['GUILD_ID'].'/roles');
+        $response = json_decode($response->getBody(),true);
+        // Registered Role
+        /** @var array $registered */
+        $registered = array_filter($response,function ($element) {
+            return $element['name'] === self::REGISTERED;
+        });
+        if (!count($registered)) {
+            $client->request('POST','/api/'.self::VERSION.'/guilds/'.$_ENV['GUILD_ID'].'/roles',
+            [
+                'json' => [
+                    'name' => self::REGISTERED
+                ]
+            ]
+            );
+            $this->addFlash('success','Created '.self::REGISTERED.' role!');
+        }
 
         return new RedirectResponse('/admin');
     }

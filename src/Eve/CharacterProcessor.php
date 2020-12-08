@@ -2,9 +2,11 @@
 
 namespace App\Eve;
 
+use App\Controller\AdminController;
 use App\Repository\AllianceRepository;
 use App\Repository\CharacterRepository;
 use App\Repository\CorporationRepository;
+use App\Repository\DiscordRoleRepository;
 use GuzzleHttp\Client;
 
 class CharacterProcessor
@@ -39,22 +41,29 @@ class CharacterProcessor
      * @var AllianceRepository
      */
     private AllianceRepository $allianceRepository;
+    /**
+     * @var DiscordRoleRepository
+     */
+    private DiscordRoleRepository $discordRoleRepository;
 
     /**
      * CharacterProcessor constructor.
      * @param CharacterRepository $characterRepository
      * @param CorporationRepository $corporationRepository
      * @param AllianceRepository $allianceRepository
+     * @param DiscordRoleRepository $discordRoleRepository
      */
     public function __construct(
         CharacterRepository $characterRepository,
         CorporationRepository $corporationRepository,
-        AllianceRepository $allianceRepository
+        AllianceRepository $allianceRepository,
+        DiscordRoleRepository $discordRoleRepository
     )
     {
         $this->characterRepository = $characterRepository;
         $this->corporationRepository = $corporationRepository;
         $this->allianceRepository = $allianceRepository;
+        $this->discordRoleRepository = $discordRoleRepository;
     }
 
     protected ?Client $client = null;
@@ -140,6 +149,8 @@ class CharacterProcessor
             foreach ($character->getRoles() as $role) {
                 $roles[] = $role;
             }
+            // Add Registered Role to all registered characters
+            $roles[] = $this->discordRoleRepository->findOneBy(['Name' => AdminController::REGISTERED]);
         }
         if ($corporation) {
             foreach ($corporation->getRoles() as $role) {
