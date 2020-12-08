@@ -52,6 +52,7 @@ easy_admin:
             - DiscordRole
             - {label: 'Pull Roles', url: '/admin/pullRoles', icon: 'download'}
             - {label: 'Push Roles', url: '/admin/pushRoles', icon: 'upload'}
+            - {label: 'Setup Roles', url: '/admin/setupRoles', icon: 'tools'}
             - {label: 'EVE'}
             - Character
             - Corporation
