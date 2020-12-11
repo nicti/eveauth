@@ -32,7 +32,7 @@ class DiscordHandler implements LoggerInterface
             $socket->send(json_encode([
                 "op" => 2,
                 "d" => [
-                    "token" => 'NzE3OTE4MDkxNzI3NjAxNjg0.XthTUw.r7EJHEDSmZrW1wBoFKWEDaj9y1o',
+                    "token" => $_ENV['BOT_TOKEN'],
                     "intents" => '0',
                     "properties" => [
                         '$os' => 'linux',
