@@ -126,15 +126,17 @@ class DiscordHandler implements LoggerInterface
      */
     public function log($level, $message, array $context = array())
     {
-        $this->client->request(
-            'POST',
-            '/api/' . self::VERSION . '/channels/' . $_ENV['REPORT_CHANNEL'] . '/messages',
-            [
-                'json' => [
-                    'content' => 'An ' . $level . ' was reported:',
-                    'embed' => $message
+        if (isset($_ENV['REPORT_CHANNEL'])) {
+            $this->client->request(
+                'POST',
+                '/api/' . self::VERSION . '/channels/' . $_ENV['REPORT_CHANNEL'] . '/messages',
+                [
+                    'json' => [
+                        'content' => 'An ' . $level . ' was reported:',
+                        'embed' => $message
+                    ]
                 ]
-            ]
-        );
+            );
+        }
     }
 }
