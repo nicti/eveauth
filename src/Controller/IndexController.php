@@ -6,6 +6,7 @@ use App\Entity\Alliance;
 use App\Entity\Character;
 use App\Entity\Corporation;
 use App\Entity\DiscordRole;
+use App\Error\DiscordHandler;
 use App\Eve\CharacterProcessor;
 use App\Repository\AllianceRepository;
 use App\Repository\CharacterRepository;
@@ -43,6 +44,10 @@ class IndexController extends AbstractController
      * @var DiscordRoleRepository
      */
     private DiscordRoleRepository $discordRoleRepository;
+    /**
+     * @var DiscordHandler
+     */
+    private DiscordHandler $errorHandler;
 
     /**
      * IndexController constructor.
@@ -51,13 +56,15 @@ class IndexController extends AbstractController
      * @param CorporationRepository $corporationRepository
      * @param AllianceRepository $allianceRepository
      * @param DiscordRoleRepository $discordRoleRepository
+     * @param DiscordHandler $errorHandler
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         CharacterRepository $characterRepository,
         CorporationRepository $corporationRepository,
         AllianceRepository $allianceRepository,
-        DiscordRoleRepository $discordRoleRepository
+        DiscordRoleRepository $discordRoleRepository,
+        DiscordHandler $errorHandler
     )
     {
         $this->characterRepository = $characterRepository;
@@ -65,6 +72,7 @@ class IndexController extends AbstractController
         $this->corporationRepository = $corporationRepository;
         $this->allianceRepository = $allianceRepository;
         $this->discordRoleRepository = $discordRoleRepository;
+        $this->errorHandler = $errorHandler;
     }
 
 
@@ -81,7 +89,8 @@ class IndexController extends AbstractController
             $this->characterRepository,
             $this->corporationRepository,
             $this->allianceRepository,
-            $this->discordRoleRepository
+            $this->discordRoleRepository,
+            $this->errorHandler
         );
         $characterData = $characterProcessor->getInfo($user->getUid(),$user->getUsername());
 
@@ -180,7 +189,8 @@ class IndexController extends AbstractController
             $this->characterRepository,
             $this->corporationRepository,
             $this->allianceRepository,
-            $this->discordRoleRepository
+            $this->discordRoleRepository,
+            $this->errorHandler
         );
         $characterData = $characterProcessor->getInfo($character->getUid(),$character->getName());
         $roles = $characterProcessor->getRolesArray($characterData);

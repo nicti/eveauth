@@ -3,12 +3,14 @@
 namespace App\Command;
 
 use App\Entity\DiscordRole;
+use App\Error\DiscordHandler;
 use App\Eve\CharacterProcessor;
 use App\Repository\AllianceRepository;
 use App\Repository\CharacterRepository;
 use App\Repository\CorporationRepository;
 use App\Repository\DiscordRoleRepository;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,6 +38,10 @@ class DiscordPushCommand extends Command
      * @var DiscordRoleRepository
      */
     private DiscordRoleRepository $discordRoleRepository;
+    /**
+     * @var DiscordHandler
+     */
+    private DiscordHandler $errorHandler;
 
     /**
      * DiscordPushCommand constructor.
@@ -43,6 +49,7 @@ class DiscordPushCommand extends Command
      * @param CorporationRepository $corporationRepository
      * @param AllianceRepository $allianceRepository
      * @param DiscordRoleRepository $discordRoleRepository
+     * @param DiscordHandler $errorHandler
      * @param string|null $name
      */
     public function __construct(
@@ -50,6 +57,7 @@ class DiscordPushCommand extends Command
         CorporationRepository $corporationRepository,
         AllianceRepository $allianceRepository,
         DiscordRoleRepository $discordRoleRepository,
+        DiscordHandler $errorHandler,
         string $name = null)
     {
         parent::__construct($name);
@@ -57,6 +65,7 @@ class DiscordPushCommand extends Command
         $this->corporationRepository = $corporationRepository;
         $this->allianceRepository = $allianceRepository;
         $this->discordRoleRepository = $discordRoleRepository;
+        $this->errorHandler = $errorHandler;
     }
 
     protected function configure()
@@ -91,6 +100,10 @@ class DiscordPushCommand extends Command
         return 0;
     }
 
+    /**
+     * @param $response
+     * @return mixed|string
+     */
     private function push($response)
     {
         $latest = '';
@@ -111,7 +124,8 @@ class DiscordPushCommand extends Command
                     $this->characterRepository,
                     $this->corporationRepository,
                     $this->allianceRepository,
-                    $this->discordRoleRepository
+                    $this->discordRoleRepository,
+                    $this->errorHandler
                 );
                 $characterData = $characterProcessor->getInfo($character->getUid(),$character->getName());
                 $roles = $characterProcessor->getRolesArray($characterData);
@@ -120,16 +134,24 @@ class DiscordPushCommand extends Command
                 foreach ($roles as $role) {
                     $roleArray[] = $role->getUid();
                 }
-                $this->client->request(
-                    'PATCH',
-                    '/api/'.self::VERSION.'/guilds/' . $_ENV['GUILD_ID'] . '/members/'.$user['user']['id'],
-                    [
-                        'json' =>  [
-                            'nick' => $characterProcessor->getName($characterData),
-                            'roles' => $roleArray
+                try {
+                    $this->client->request(
+                        'PATCH',
+                        '/api/'.self::VERSION.'/guilds/' . $_ENV['GUILD_ID'] . '/members/'.$user['user']['id'],
+                        [
+                            'json' =>  [
+                                'nick' => $characterProcessor->getName($characterData),
+                                'roles' => $roleArray
+                            ]
                         ]
-                    ]
-                );
+                    );
+                } catch (RequestException $exception) {
+                    $this->errorHandler->error([
+                        'title' => 'HTTP error '.$exception->getCode(),
+                        'description' => $exception->getMessage()
+                    ]);
+                }
+
             }
             $latest = $user['user']['id'];
         }
