@@ -78,6 +78,8 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/", name="index")
+     * @param Request $request
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function index(Request $request)
     {
@@ -85,6 +87,7 @@ class IndexController extends AbstractController
         if (!$user) {
             return new RedirectResponse('sso');
         }
+        /** @noinspection DuplicatedCode */
         $characterProcessor = new CharacterProcessor(
             $this->characterRepository,
             $this->corporationRepository,
@@ -185,6 +188,7 @@ class IndexController extends AbstractController
         $this->entityManager->persist($character);
         $this->entityManager->flush();
 
+        /** @noinspection DuplicatedCode */
         $characterProcessor = new CharacterProcessor(
             $this->characterRepository,
             $this->corporationRepository,

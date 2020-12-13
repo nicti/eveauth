@@ -171,8 +171,15 @@ class CharacterProcessor
         ];
     }
 
-    public function getRolesArray(array $data)
+    /**
+     * @param array|null $data
+     * @return array
+     */
+    public function getRolesArray(array $data = null)
     {
+        if ($data === null) {
+            return null;
+        }
         $character = $this->characterRepository->findOneBy(['uid' => $data['char']['id']]);
         $corporation = $this->corporationRepository->findOneBy(['uid' => $data['corp']['id']]);
         $alliance = $this->allianceRepository->findOneBy(['uid' => $data['alli']['id']]);
