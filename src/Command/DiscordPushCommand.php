@@ -120,6 +120,7 @@ class DiscordPushCommand extends Command
                     //skip users who are not auth'd
                     continue;
                 }
+                /** @noinspection DuplicatedCode */
                 $characterProcessor = new CharacterProcessor(
                     $this->characterRepository,
                     $this->corporationRepository,
@@ -129,6 +130,12 @@ class DiscordPushCommand extends Command
                 );
                 $characterData = $characterProcessor->getInfo($character->getUid(),$character->getName());
                 $roles = $characterProcessor->getRolesArray($characterData);
+                if ($roles === null) {
+                    $this->errorHandler->warning([
+                        'title' => 'Insufficient character data pull',
+                        'description' => 'Could not pull character data, this happens likely when a api request to esi failed'
+                    ]);
+                }
                 $roleArray = [];
                 /** @var DiscordRole $role */
                 foreach ($roles as $role) {
@@ -148,7 +155,7 @@ class DiscordPushCommand extends Command
                 } catch (RequestException $exception) {
                     $this->errorHandler->error([
                         'title' => 'HTTP error '.$exception->getCode(),
-                        'description' => $exception->getMessage()
+                        'description' => strip_tags($exception->getMessage())
                     ]);
                 }
 
