@@ -47,10 +47,6 @@ class CharacterProcessor
      * @var DiscordRoleRepository
      */
     private DiscordRoleRepository $discordRoleRepository;
-    /**
-     * @var DiscordHandler
-     */
-    private DiscordHandler $errorHandler;
 
     /**
      * CharacterProcessor constructor.
@@ -58,21 +54,18 @@ class CharacterProcessor
      * @param CorporationRepository $corporationRepository
      * @param AllianceRepository $allianceRepository
      * @param DiscordRoleRepository $discordRoleRepository
-     * @param DiscordHandler $errorHandler
      */
     public function __construct(
         CharacterRepository $characterRepository,
         CorporationRepository $corporationRepository,
         AllianceRepository $allianceRepository,
-        DiscordRoleRepository $discordRoleRepository,
-        DiscordHandler $errorHandler
+        DiscordRoleRepository $discordRoleRepository
     )
     {
         $this->characterRepository = $characterRepository;
         $this->corporationRepository = $corporationRepository;
         $this->allianceRepository = $allianceRepository;
         $this->discordRoleRepository = $discordRoleRepository;
-        $this->errorHandler = $errorHandler;
     }
 
     protected ?Client $client = null;
@@ -101,30 +94,14 @@ class CharacterProcessor
                 ],
             ]);
         }
-        try {
-            $response = $this->client->request('GET','/v4/characters/'.$characterID.'/');
-        } catch (RequestException $requestException) {
-            $this->errorHandler->error([
-                'title' => 'HTTP error '.$requestException->getCode(),
-                'description' => "Encountered an http error while requesting corporations data:\r".$requestException->getMessage()
-            ]);
-            return null;
-        }
+        $response = $this->client->request('GET','/v4/characters/'.$characterID.'/');
         $response = json_decode($response->getBody(),true);
 
         $this->corpID = $response['corporation_id']??'';
         $this->allianceID = $response['alliance_id']??'';
 
         if (!isset($this->idCache[$this->corpID])) {
-            try {
-                $corpResponse = $this->client->request('GET','/v4/corporations/'.$this->corpID.'/');
-            } catch (RequestException $requestException) {
-                $this->errorHandler->error([
-                    'title' => 'HTTP error '.$requestException->getCode(),
-                    'description' => "Encountered an http error while requesting corporations data:\r".$requestException->getMessage()
-                ]);
-                return null;
-            }
+            $corpResponse = $this->client->request('GET','/v4/corporations/'.$this->corpID.'/');
             $corpResponse = json_decode($corpResponse->getBody(),true);
             $this->idCache[$this->corpID] = array(
                 'name' => $corpResponse['name'],
@@ -135,15 +112,7 @@ class CharacterProcessor
         $this->corpTicker = $this->idCache[$this->corpID]['ticker'];
 
         if (!isset($this->idCache[$this->allianceID])) {
-            try {
-                $allianceResponse = $this->client->request('GET','/v3/alliances/'.$this->allianceID.'/');
-            } catch (RequestException $requestException) {
-                $this->errorHandler->error([
-                    'title' => 'HTTP error '.$requestException->getCode(),
-                    'description' => "Encountered an http error while requesting alliances data:\r".$requestException->getMessage()
-                ]);
-                return null;
-            }
+            $allianceResponse = $this->client->request('GET','/v3/alliances/'.$this->allianceID.'/');
             $allianceResponse = json_decode($allianceResponse->getBody(),true);
             $this->idCache[$this->allianceID] = array(
                 'name' => $allianceResponse['name'],
