@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMissingFieldTypeInspection */
 
 namespace App\Command;
 
@@ -19,7 +19,7 @@ class DiscordPushCommand extends Command
 {
     const BASE_URI = 'https://discord.com/api';
     const VERSION = 'v6';
-    protected static string $defaultName = 'app:discord:push';
+    protected static $defaultName = 'app:discord:push';
 
     /**
      * @var Client|null
