@@ -6,7 +6,6 @@ use App\Entity\Alliance;
 use App\Entity\Character;
 use App\Entity\Corporation;
 use App\Entity\DiscordRole;
-use App\Error\DiscordHandler;
 use App\Eve\CharacterProcessor;
 use App\Repository\AllianceRepository;
 use App\Repository\CharacterRepository;
@@ -14,9 +13,11 @@ use App\Repository\CorporationRepository;
 use App\Repository\DiscordRoleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController extends AbstractController
@@ -44,10 +45,6 @@ class IndexController extends AbstractController
      * @var DiscordRoleRepository
      */
     private DiscordRoleRepository $discordRoleRepository;
-    /**
-     * @var DiscordHandler
-     */
-    private DiscordHandler $errorHandler;
 
     /**
      * IndexController constructor.
@@ -56,15 +53,13 @@ class IndexController extends AbstractController
      * @param CorporationRepository $corporationRepository
      * @param AllianceRepository $allianceRepository
      * @param DiscordRoleRepository $discordRoleRepository
-     * @param DiscordHandler $errorHandler
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         CharacterRepository $characterRepository,
         CorporationRepository $corporationRepository,
         AllianceRepository $allianceRepository,
-        DiscordRoleRepository $discordRoleRepository,
-        DiscordHandler $errorHandler
+        DiscordRoleRepository $discordRoleRepository
     )
     {
         $this->characterRepository = $characterRepository;
@@ -72,14 +67,13 @@ class IndexController extends AbstractController
         $this->corporationRepository = $corporationRepository;
         $this->allianceRepository = $allianceRepository;
         $this->discordRoleRepository = $discordRoleRepository;
-        $this->errorHandler = $errorHandler;
     }
 
 
     /**
      * @Route("/", name="index")
      * @param Request $request
-     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function index(Request $request)
     {
@@ -92,9 +86,9 @@ class IndexController extends AbstractController
             $this->characterRepository,
             $this->corporationRepository,
             $this->allianceRepository,
-            $this->discordRoleRepository,
-            $this->errorHandler
+            $this->discordRoleRepository
         );
+        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $characterData = $characterProcessor->getInfo($user->getUid(),$user->getUsername());
 
         $character = $this->characterRepository->findOneBy(['uid' => $characterData['char']['id']]);
@@ -137,7 +131,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/sso")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function login()
     {
@@ -147,6 +141,8 @@ class IndexController extends AbstractController
     /**
      * @Route("/discord/callback")
      * @param Request $request
+     * @return RedirectResponse
+     * @throws GuzzleException
      */
     public function discordCallback(Request $request)
     {
@@ -180,6 +176,7 @@ class IndexController extends AbstractController
         $userResponse = json_decode($userResponse->getBody(),true);
 
 
+        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $character = $this->characterRepository->findOneBy(['uid' => $this->getUser()->getUid()]);
         $character->setDiscordId($userResponse['id']);
         $character->setDiscordMail($userResponse['email']);
@@ -193,8 +190,7 @@ class IndexController extends AbstractController
             $this->characterRepository,
             $this->corporationRepository,
             $this->allianceRepository,
-            $this->discordRoleRepository,
-            $this->errorHandler
+            $this->discordRoleRepository
         );
         $characterData = $characterProcessor->getInfo($character->getUid(),$character->getName());
         $roles = $characterProcessor->getRolesArray($characterData);
@@ -211,7 +207,7 @@ class IndexController extends AbstractController
                 'Content-Type'  => 'application/json',
             ],
         ]);
-        $joinReponse = $joinClient->request('PUT','/api/'.self::VERSION.'/guilds/'.$_ENV['GUILD_ID'].'/members/'.$character->getDiscordId(),[
+        $joinClient->request('PUT','/api/'.self::VERSION.'/guilds/'.$_ENV['GUILD_ID'].'/members/'.$character->getDiscordId(),[
             'json' => [
                 'access_token' => $response['access_token'],
                 'nick' => $characterProcessor->getName($characterData),
