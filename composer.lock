@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ab6e01a8cc7a982c6f595900c4c3ceaf",
+    "content-hash": "56cfd73a28a718275da4e38375e1a2e9",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -3872,7 +3872,7 @@
         },
         {
             "name": "symfony/asset",
-            "version": "v5.1.9",
+            "version": "v5.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/asset.git",
@@ -3921,7 +3921,7 @@
             "description": "Symfony Asset Component",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/asset/tree/v5.2.0-RC2"
+                "source": "https://github.com/symfony/asset/tree/v5.2.0"
             },
             "funding": [
                 {
