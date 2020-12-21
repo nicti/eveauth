@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ab6e01a8cc7a982c6f595900c4c3ceaf",
+    "content-hash": "38e0d852a9d3a5b4426d2cb389b6cf9c",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -6816,16 +6816,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v5.1.9",
+            "version": "v5.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "b25b468538c82f6594058aabaa9bac48d7ef2170"
+                "reference": "bd8815b8b6705298beaa384f04fabd459c10bedd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/b25b468538c82f6594058aabaa9bac48d7ef2170",
-                "reference": "b25b468538c82f6594058aabaa9bac48d7ef2170",
+                "url": "https://api.github.com/repos/symfony/process/zipball/bd8815b8b6705298beaa384f04fabd459c10bedd",
+                "reference": "bd8815b8b6705298beaa384f04fabd459c10bedd",
                 "shasum": ""
             },
             "require": {
@@ -6858,7 +6858,7 @@
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v5.1.9"
+                "source": "https://github.com/symfony/process/tree/v5.2.1"
             },
             "funding": [
                 {
@@ -6874,7 +6874,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-02T15:45:32+00:00"
+            "time": "2020-12-08T17:03:37+00:00"
         },
         {
             "name": "symfony/property-access",
