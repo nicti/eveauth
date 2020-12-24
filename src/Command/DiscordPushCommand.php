@@ -11,6 +11,7 @@ use App\Repository\CorporationRepository;
 use App\Repository\DiscordRoleRepository;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -45,6 +46,10 @@ class DiscordPushCommand extends Command
      * @var DiscordHandler
      */
     private DiscordHandler $errorHandler;
+    /**
+     * @var LoggerInterface
+     */
+    private LoggerInterface $logger;
 
     /**
      * DiscordPushCommand constructor.
@@ -61,6 +66,7 @@ class DiscordPushCommand extends Command
         AllianceRepository $allianceRepository,
         DiscordRoleRepository $discordRoleRepository,
         DiscordHandler $errorHandler,
+        LoggerInterface $logger,
         string $name = null)
     {
         parent::__construct($name);
@@ -69,6 +75,7 @@ class DiscordPushCommand extends Command
         $this->allianceRepository = $allianceRepository;
         $this->discordRoleRepository = $discordRoleRepository;
         $this->errorHandler = $errorHandler;
+        $this->logger = $logger;
     }
 
     protected function configure()
@@ -134,7 +141,10 @@ class DiscordPushCommand extends Command
             } else {
                 $character = $this->characterRepository->findOneBy(['DiscordId' => $user['user']['id']]);
                 if ($character === null) {
-                    //skip users who are not auth'd
+                    // User has roles to purge
+                    if (count($user['roles'])) {
+                        $this->patchUser($user['user']['id'],$user['user']['username'],[]);
+                    }
                     continue;
                 }
                 /** @noinspection DuplicatedCode */
@@ -151,21 +161,32 @@ class DiscordPushCommand extends Command
                 foreach ($roles as $role) {
                     $roleArray[] = $role->getUid();
                 }
+                $name = $characterProcessor->getName($characterData);
 
-                $this->client->request(
-                    'PATCH',
-                    '/api/'.self::VERSION.'/guilds/' . $_ENV['GUILD_ID'] . '/members/'.$user['user']['id'],
-                    [
-                        'json' =>  [
-                            'nick' => $characterProcessor->getName($characterData),
-                            'roles' => $roleArray
-                        ]
-                    ]
-                );
+                //Only run patch if data is different
+                if (count(array_diff($roleArray,$user['roles'])) || $name !== $user['nick']) {
+                    $this->patchUser($user['user']['id'],$name,$roleArray);
+                }
+
 
             }
             $latest = $user['user']['id'];
         }
         return $latest;
+    }
+
+    private function patchUser($id, $nick, $roles)
+    {
+        $this->logger->debug('Patching '.$id.' to name '.$nick.' and roles '.implode(',',$roles));
+        $this->client->request(
+            'PATCH',
+            '/api/'.self::VERSION.'/guilds/' . $_ENV['GUILD_ID'] . '/members/'.$id,
+            [
+                'json' =>  [
+                    'nick' => $nick,
+                    'roles' => $roles
+                ]
+            ]
+        );
     }
 }
