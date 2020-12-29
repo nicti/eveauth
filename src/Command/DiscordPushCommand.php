@@ -164,7 +164,7 @@ class DiscordPushCommand extends Command
                 $name = $characterProcessor->getName($characterData);
 
                 //Only run patch if data is different
-                if (count(array_diff($roleArray,$user['roles'])) || $name !== $user['nick']) {
+                if (count(array_merge(array_diff($roleArray,$user['roles']),array_diff($user['roles'],$roleArray))) || $name !== $user['nick']) {
                     $this->patchUser($user['user']['id'],$name,$roleArray);
                 }
 
