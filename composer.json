@@ -38,7 +38,7 @@
         "symfony/twig-pack": "*",
         "symfony/validator": "5.1.*",
         "symfony/web-link": "5.1.*",
-        "symfony/yaml": "5.1.*",
+        "symfony/yaml": "5.3.*",
         "textalk/websocket": "1.0.*"
     },
     "require-dev": {
